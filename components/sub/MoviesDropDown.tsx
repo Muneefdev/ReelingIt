@@ -1,7 +1,7 @@
 export default function MoviesDropDown() {
   return (
     <div
-      className="absolute -left-[70px] top-8 bg-[#222] w-[375px] h-[230px] rounded-lg p-4 z-10"
+      className="absolute -left-[70px] top-8 bg-[#333] w-[375px] h-[230px] rounded-lg p-4 z-10"
     >
       <ul className="flex justify-between text-[11px] font-normal">
         <div>
