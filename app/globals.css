@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-  background-color: black;
-  color: #fff;
+@layer base {
+  body {
+    background-color: #222;
+  }
 }
