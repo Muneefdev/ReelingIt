@@ -1,6 +1,6 @@
 import "server-only";
 import sql from "@/db/postgres";
-import { Movie } from "@/types";
+import type { Movie, Actor } from "@/types";
 
 /*
  * BIG NOTE:
@@ -83,10 +83,65 @@ async function getMovieById(id: number): Promise<Movie> {
    return movies[0];
 }
 
+async function getActorsByMovieId(id: number): Promise<Actor[]> {
+   let actors: Actor[] = [];
+   try {
+      actors = await sql!<Actor[]>`
+      SELECT p.id, p.name
+      FROM people p
+      INNER JOIN casts c
+      ON p.id = c.person_id
+      INNER JOIN movies m
+      ON m.id = c.movie_id
+      WHERE m.id = ${id}
+      ORDER BY p.name
+      LIMIT 8`
+   } catch (error) {
+      console.error(`#GET_ACTORS_BY_MOVIE_ID - ${error}`);
+   }
+   return actors;
+}
+
+async function getMovieAbstract(id: number): Promise<string | null> {
+   let rows: { abstract: string }[] = [];
+   try {
+      rows = await sql!`
+      SELECT abstract
+      FROM movie_abstracts_en
+      WHERE movie_id = ${id}`
+   } catch (error) {
+      console.error(`#GET_MOVIE_ABSTRACT - ${error}`);
+   }
+
+   if (rows.length === 0) return null;
+   return rows[0].abstract;
+}
+
+async function getMovieCategories(id: number): Promise<{ id: number, name: string }[]> {
+   let categories: { id: number, name: string }[] = [];
+   try {
+      categories = await sql!`
+      SELECT c.id, c.name
+      FROM movie_keywords mk
+      INNER JOIN movies m
+      ON m.id = mk.movie_id
+      INNER JOIN categories c
+      ON c.id = mk.category_id
+      WHERE m.id = ${id}
+      LIMIT 5`
+   } catch (error) {
+      console.error(`#GET_MOVIE_CATEGORIES - ${error}`);
+   }
+   return categories;
+}
+
 export const MoviesDataAPI = {
    getMovies,
    getMovieByYear,
    getMoviesWeeksTopTen,
    getMoviesBySearch,
    getMovieById,
+   getActorsByMovieId,
+   getMovieAbstract,
+   getMovieCategories
 };

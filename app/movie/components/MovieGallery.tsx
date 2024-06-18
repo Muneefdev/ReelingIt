@@ -1,15 +1,14 @@
 import { MoviesDataAPI } from "@/lib/data";
+import type { Movie } from "@/types";
 import Image from "next/image";
 
-
 type MovieGalleryProps = {
-   id: string;
+   movie: Movie
 }
 
-export default async function MovieGallery({ id }: MovieGalleryProps) {
-   const movie = await MoviesDataAPI.getMovieById(Number(id));
+export default async function MovieGallery({ movie }: MovieGalleryProps) {
+   const categories = await MoviesDataAPI.getMovieCategories(movie.id);
    return (
-      <>
          <section className="max-w-[1000px] mx-auto mt-8">
             <h3>{movie.name.toUpperCase()}</h3>
             <div className="flex gap-3 mt-2">
@@ -58,15 +57,11 @@ export default async function MovieGallery({ id }: MovieGalleryProps) {
             </div>
             <footer className="mt-2">
                <ul className="flex gap-3 [&>li]:px-2 [&>li]:py-1 [&>li]:bg-[#333] [&>li]:rounded-lg [&>li]:text-[10px] items-center">
-                  <li>Action & Advenutre</li>
-                  <li>Drama</li>
-                  <li>Sci-fi</li>
+                  {categories.map((c) => <li key={c.id}>{c.name}</li>)}
                   <span className="text-[#333]">|</span>
                   <li>United States</li>
                </ul>
             </footer>
          </section>
-
-      </>
    )
 }
