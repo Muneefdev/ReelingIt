@@ -10,7 +10,7 @@ export default function SearchBox() {
       const param = new URLSearchParams(searchParams);
       movie ? param.set("search", movie) : param.delete("search");
       router.replace(`/${'?'+param}`);
-   }, 100);
+   }, 500);
 
    return (
       <div className="flex items-center rounded-md border border-[#ccc] bg-[#222] px-2 py-1">

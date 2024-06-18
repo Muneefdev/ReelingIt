@@ -1,11 +1,11 @@
 import MoviesSlider from "@/components/main/MoviesSlider";
-import { getMovieByYear, getMovies, getMoviesWeeksTopTen } from "@/lib/data";
+import { MoviesDataAPI } from "@/lib/data";
 
 export default async function MainSliders() {
    const [movies, moviesByYear, moviesTopTen] = await Promise.all([
-      getMovies(),
-      getMovieByYear(2021),
-      getMoviesWeeksTopTen(),
+      MoviesDataAPI.getMovies(),
+      MoviesDataAPI.getMovieByYear(2021),
+      MoviesDataAPI.getMoviesWeeksTopTen(),
    ]);
 
    return (

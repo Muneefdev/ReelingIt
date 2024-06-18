@@ -1,15 +1,17 @@
+import MovieActors from "../components/MovieActors";
+import MovieGallery from "../components/MovieGallery";
 
 interface MovieInfoProps {
-  params: {
-    id: string;
-  }
+   params: {
+      id: string;
+   }
 }
 
-export default function MovieInfo({ params }: MovieInfoProps) {
-
-  return (
-    <section className="h-full">
-      <h4>Movie Name</h4>
-    </section>
-  )
+export default async function MovieInfo({ params }: MovieInfoProps) {
+   return (
+      <div className="container h-full text-white">
+         <MovieGallery id={params.id} />
+         <MovieActors/>
+      </div>
+   )
 }

@@ -10,12 +10,12 @@ import { Movie } from "@/types";
  * inside the function by the driver.
  */
 
-export async function getMovies(limit: number = 10): Promise<Movie[]> {
+async function getMovies(limit: number = 10): Promise<Movie[]> {
    let movies: Movie[] = [];
    try {
       movies = await sql!<Movie[]>`
       SELECT id, name, CAST(date AS VARCHAR)
-      FROM movies 
+      FROM movies
       WHERE date IS NOT NULL
       ORDER BY date DESC
       LIMIT ${limit}`;
@@ -26,12 +26,12 @@ export async function getMovies(limit: number = 10): Promise<Movie[]> {
    return movies;
 }
 
-export async function getMovieByYear(year: number): Promise<Movie[]> {
+async function getMovieByYear(year: number): Promise<Movie[]> {
    let movies: Movie[] = [];
    try {
       movies = await sql!<Movie[]>`
       SELECT id, name, CAST(date AS VARCHAR)
-      FROM movies 
+      FROM movies
       WHERE date IS NOT NULL
       AND DATE_PART('year', date) = ${year}
       ORDER BY date DESC`;
@@ -41,12 +41,12 @@ export async function getMovieByYear(year: number): Promise<Movie[]> {
    return movies;
 }
 
-export async function getMoviesWeeksTopTen(): Promise<Movie[]> {
+async function getMoviesWeeksTopTen(): Promise<Movie[]> {
    let movies: Movie[] = [];
    try {
       movies = await sql!<Movie[]>`
       SELECT id, name, CAST(date AS VARCHAR)
-      FROM movies 
+      FROM movies
       WHERE date IS NOT NULL
       AND date >= CURRENT_DATE - INTERVAL '7 days'`;
    } catch (error) {
@@ -55,16 +55,38 @@ export async function getMoviesWeeksTopTen(): Promise<Movie[]> {
    return movies;
 }
 
-export async function getMoviesBySearch(name: string): Promise<Movie[]> {
-  let movies: Movie[] = [];
+async function getMoviesBySearch(name: string): Promise<Movie[]> {
+   let movies: Movie[] = [];
    try {
-      movies = await sql!<Movie[]>` 
+      movies = await sql!<Movie[]>`
       SELECT id, name, CAST(date AS VARCHAR)
-      FROM movies 
+      FROM movies
       WHERE name ILIKE ${name + '%'}
+      AND date IS NOT NULL
       LIMIT 20`;
    } catch (error) {
       console.error(`#GET_MOVIES_BY_SEARCH - ${error}`);
    }
    return movies;
 }
+
+async function getMovieById(id: number): Promise<Movie> {
+   let movies: Movie[] = [];
+   try {
+      movies = await sql!<Movie[]>`
+      SELECT id, name, CAST(date AS VARCHAR)
+      FROM movies
+      WHERE id = ${id}`;
+   } catch (error) {
+      console.error(`#GET_MOVIE_BY_ID - ${error}`);
+   }
+   return movies[0];
+}
+
+export const MoviesDataAPI = {
+   getMovies,
+   getMovieByYear,
+   getMoviesWeeksTopTen,
+   getMoviesBySearch,
+   getMovieById,
+};
